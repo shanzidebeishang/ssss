@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 爱的告白 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            animation: float 3s ease-in-out infinite;
+            max-width: 90%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .main-text {
+            font-size: 2.5em;
+            color: #d63384;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .sub-text {
+            font-size: 1.2em;
+            color: #e91e63;
+            margin: 15px 0;
+            opacity: 0.9;
+        }
+
+        .heart {
+            color: #ff6b9d;
+            font-size: 3em;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            margin: 20px 0;
+        }
+
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.8);
+            font-size: 2em;
+            animation: floatUp 4s linear infinite;
+        }
+
+        .floating-heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .floating-heart:nth-child(2) { left: 20%; animation-delay: 0.5s; }
+        .floating-heart:nth-child(3) { left: 30%; animation-delay: 1s; }
+        .floating-heart:nth-child(4) { left: 40%; animation-delay: 1.5s; }
+        .floating-heart:nth-child(5) { left: 50%; animation-delay: 2s; }
+        .floating-heart:nth-child(6) { left: 60%; animation-delay: 2.5s; }
+        .floating-heart:nth-child(7) { left: 70%; animation-delay: 3s; }
+        .floating-heart:nth-child(8) { left: 80%; animation-delay: 3.5s; }
+        .floating-heart:nth-child(9) { left: 90%; animation-delay: 4s; }
+
+        .romantic-quote {
+            font-size: 1em;
+            color: #8e44ad;
+            font-style: italic;
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+
+        .buttons-container {
+            margin: 30px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .romantic-btn {
+            background: linear-gradient(45deg, #ff6b9d, #e91e63);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            color: white;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .romantic-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.5);
+        }
+
+        .romantic-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .romantic-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .romantic-btn:hover::before {
+            left: 100%;
+        }
+
+        .photo-gallery {
+            display: none;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .photo-gallery.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .photo-container {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-container:hover img {
+            transform: scale(1.05);
+        }
+
+        .photo-nav {
+            margin: 20px 0;
+        }
+
+        .photo-nav button {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 10px 15px;
+            margin: 0 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .photo-nav button:hover {
+            background: #ff6b9d;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .love-story {
+            display: none;
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            color: #8e44ad;
+            line-height: 1.6;
+        }
+
+        .love-story.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .wish-container {
+            display: none;
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+        }
+
+        .wish-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .wish-input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #8e44ad;
+            font-size: 1em;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .wish-input::placeholder {
+            color: #b19cd9;
+        }
+
+        .sparkle {
+            position: absolute;
+            color: #ffd700;
+            animation: sparkle 2s linear infinite;
+        }
+
+        .sparkle:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 30%; right: 15%; animation-delay: 0.5s; }
+        .sparkle:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 1s; }
+        .sparkle:nth-child(4) { bottom: 40%; right: 20%; animation-delay: 1.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 2px 2px 4px rgba(0,0,0,0.1), 0 0 10px rgba(214, 51, 132, 0.3); }
+            100% { text-shadow: 2px 2px 4px rgba(0,0,0,0.1), 0 0 20px rgba(214, 51, 132, 0.6); }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes floatUp {
+            0% {
+                bottom: -50px;
+                opacity: 1;
+                transform: translateX(0px) rotate(0deg);
+            }
+            100% {
+                bottom: 100vh;
+                opacity: 0;
+                transform: translateX(50px) rotate(360deg);
+            }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .main-text {
+                font-size: 2em;
+            }
+            .container {
+                padding: 30px 15px;
+            }
+            .heart {
+                font-size: 2.5em;
+            }
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .romantic-btn {
+                width: 80%;
+                margin: 8px 0;
+            }
+            .photo-container {
+                max-width: 95%;
+            }
+            .photo-container img {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts">
+        <div class="floating-heart">💕</div>
+        <div class="floating-heart">💖</div>
+        <div class="floating-heart">💝</div>
+        <div class="floating-heart">💕</div>
+        <div class="floating-heart">💖</div>
+        <div class="floating-heart">💝</div>
+        <div class="floating-heart">💕</div>
+        <div class="floating-heart">💖</div>
+        <div class="floating-heart">💝</div>
+    </div>
+
+    <div class="sparkle">✨</div>
+    <div class="sparkle">⭐</div>
+    <div class="sparkle">✨</div>
+    <div class="sparkle">⭐</div>
+
+    <div class="container">
+        <div class="heart">💖</div>
+        <div class="main-text">伏颜珏 💕 彭睿璇</div>
+        <div class="sub-text">我爱你</div>
+        <div class="heart">💝</div>
+        <div class="romantic-quote">
+            "在浩瀚的宇宙中，我们相遇<br>
+            这是最美丽的奇迹 ✨"
+        </div>
+
+        <!-- 浪漫按钮 -->
+        <div class="buttons-container">
+            <button class="romantic-btn" onclick="showGallery()">
+                📸 看我们的回忆
+            </button>
+            <button class="romantic-btn" onclick="showLoveStory()">
+                💌 爱的故事
+            </button>
+            <button class="romantic-btn" onclick="showWish()">
+                🌟 许下心愿
+            </button>
+            <button class="romantic-btn" onclick="playMusic()">
+                🎵 听我们的歌
+            </button>
+        </div>
+
+        <!-- 照片轮播 -->
+        <div class="photo-gallery" id="photoGallery">
+            <h3 style="color: #d63384; margin-bottom: 20px;">💕 我们的美好时光 💕</h3>
+            <div class="photo-container">
+                <img id="currentPhoto" src="4752e8cd2014caa81b30ce55ffff94b.jpg" alt="我们的照片">
+            </div>
+            <div class="photo-nav">
+                <button onclick="prevPhoto()">❮</button>
+                <button onclick="nextPhoto()">❯</button>
+            </div>
+            <p style="color: #e91e63; margin-top: 15px;">每一张照片都记录着我们的爱情 💖</p>
+        </div>
+
+        <!-- 爱的故事 -->
+        <div class="love-story" id="loveStory">
+            <h3 style="color: #d63384; margin-bottom: 20px;">💌 我们的爱情故事</h3>
+            <p>从第一次遇见你的那一刻起，我就知道，你就是我要等的那个人。✨</p>
+            <br>
+            <p>你的笑容像春天的花朵，温暖了我整个世界。🌸</p>
+            <br>
+            <p>愿我们一起走过春夏秋冬，看遍世间美景，直到白头偕老。💕</p>
+            <br>
+            <p style="text-align: center; font-weight: bold; color: #d63384;">
+                "因为遇见你，人生变得美好而有意义 💖"
+            </p>
+        </div>
+
+        <!-- 许愿功能 -->
+        <div class="wish-container" id="wishContainer">
+            <h3 style="color: #d63384; margin-bottom: 20px;">🌟 许下我们的心愿</h3>
+            <input type="text" class="wish-input" placeholder="在这里写下你的心愿..." id="wishInput">
+            <button class="romantic-btn" onclick="makeWish()" style="margin-top: 15px;">
+                ✨ 许愿成真
+            </button>
+            <div id="wishResult" style="margin-top: 20px; color: #d63384;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 照片数组
+        const photos = [
+            '4752e8cd2014caa81b30ce55ffff94b.jpg',
+            '0876e91b092411cf0aae3e5c437f489.jpg',
+            '2dccc2178fb7c8781942a0c3ba19a63.jpg',
+            'b0f5f2683547a10fa39710662200f47.jpg',
+            '45ceb084ba38cba0bff9bfb260162ab.jpg',
+            '721ad120998f6120ae39048d8b44268.jpg',
+            '2a582874f080d316a91620141727016.jpg'
+        ];
+        
+        let currentPhotoIndex = 0;
+
+        // 添加点击特效
+        document.addEventListener('click', function(e) {
+            createRipple(e.clientX, e.clientY);
+        });
+
+        function createRipple(x, y) {
+            const ripple = document.createElement('div');
+            ripple.style.position = 'fixed';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.style.transform = 'translate(-50%, -50%)';
+            ripple.style.width = '10px';
+            ripple.style.height = '10px';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 182, 193, 0.6)';
+            ripple.style.animation = 'ripple 0.6s linear';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.zIndex = '9999';
+            
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => {
+                document.body.removeChild(ripple);
+            }, 600);
+        }
+
+        // 隐藏所有内容区域
+        function hideAllSections() {
+            document.getElementById('photoGallery').classList.remove('active');
+            document.getElementById('loveStory').classList.remove('active');
+            document.getElementById('wishContainer').classList.remove('active');
+        }
+
+        // 显示照片轮播
+        function showGallery() {
+            hideAllSections();
+            document.getElementById('photoGallery').classList.add('active');
+        }
+
+        // 显示爱的故事
+        function showLoveStory() {
+            hideAllSections();
+            document.getElementById('loveStory').classList.add('active');
+        }
+
+        // 显示许愿功能
+        function showWish() {
+            hideAllSections();
+            document.getElementById('wishContainer').classList.add('active');
+        }
+
+        // 播放音乐
+        function playMusic() {
+            // 创建浪漫提示
+            const musicMsg = document.createElement('div');
+            musicMsg.style.position = 'fixed';
+            musicMsg.style.top = '50%';
+            musicMsg.style.left = '50%';
+            musicMsg.style.transform = 'translate(-50%, -50%)';
+            musicMsg.style.background = 'rgba(255, 255, 255, 0.9)';
+            musicMsg.style.padding = '20px 30px';
+            musicMsg.style.borderRadius = '15px';
+            musicMsg.style.color = '#d63384';
+            musicMsg.style.fontSize = '1.2em';
+            musicMsg.style.textAlign = 'center';
+            musicMsg.style.zIndex = '10000';
+            musicMsg.style.animation = 'fadeIn 0.5s ease-in';
+            musicMsg.innerHTML = '🎵 想象着我们最喜欢的歌曲在播放... 💕<br><small>在微信中可以添加背景音乐哦</small>';
+            
+            document.body.appendChild(musicMsg);
+            
+            setTimeout(() => {
+                document.body.removeChild(musicMsg);
+            }, 3000);
+        }
+
+        // 上一张照片
+        function prevPhoto() {
+            currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+            document.getElementById('currentPhoto').src = photos[currentPhotoIndex];
+        }
+
+        // 下一张照片
+        function nextPhoto() {
+            currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+            document.getElementById('currentPhoto').src = photos[currentPhotoIndex];
+        }
+
+        // 许愿功能
+        function makeWish() {
+            const wishInput = document.getElementById('wishInput');
+            const wishResult = document.getElementById('wishResult');
+            const wish = wishInput.value.trim();
+            
+            if (wish === '') {
+                wishResult.innerHTML = '💕 请先写下你的心愿哦！';
+                return;
+            }
+            
+            const wishes = [
+                '✨ 愿我们的爱情永远甜蜜美好！',
+                '🌟 愿我们一起走过每一个春夏秋冬！',
+                '💖 愿我们的笑容永远灿烂如花！',
+                '🌈 愿我们的未来充满阳光和希望！',
+                '💕 愿我们的爱情故事永远美丽动人！'
+            ];
+            
+            const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+            
+            wishResult.innerHTML = `
+                <div style="animation: fadeIn 0.5s ease-in;">
+                    <p>你的心愿已被爱神收到：</p>
+                    <p style="font-style: italic; margin: 10px 0;">"${wish}"</p>
+                    <p>${randomWish}</p>
+                    <p style="margin-top: 15px;">💫 爱会让一切美好成真！</p>
+                </div>
+            `;
+            
+            wishInput.value = '';
+            
+            // 创建许愿特效
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const star = document.createElement('div');
+                    star.innerHTML = '⭐';
+                    star.style.position = 'fixed';
+                    star.style.left = Math.random() * window.innerWidth + 'px';
+                    star.style.top = Math.random() * window.innerHeight + 'px';
+                    star.style.fontSize = '2em';
+                    star.style.animation = 'sparkle 2s linear forwards';
+                    star.style.pointerEvents = 'none';
+                    star.style.zIndex = '9999';
+                    
+                    document.body.appendChild(star);
+                    
+                    setTimeout(() => {
+                        if (document.body.contains(star)) {
+                            document.body.removeChild(star);
+                        }
+                    }, 2000);
+                }, i * 100);
+            }
+        }
+
+        // 自动轮播照片
+        let autoSlide = setInterval(() => {
+            if (document.getElementById('photoGallery').classList.contains('active')) {
+                nextPhoto();
+            }
+        }, 4000);
+
+        // 添加涟漪动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: translate(-50%, -50%) scale(8);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html> 
