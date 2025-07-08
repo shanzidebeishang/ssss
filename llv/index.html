@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>伏颜珏 ♡ 彭睿璇</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', '微软雅黑', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            touch-action: none;
+            position: relative;
+        }
+
+        /* 星空背景效果 */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            font-size: 2rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+
+        .heart {
+            color: #ff6b9d;
+            font-size: 1.2em;
+            margin: 0 10px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            height: 300px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .slideshow-container.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.8s ease-in-out;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .love-quotes {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            text-align: center;
+            margin: 20px 0;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1.5s forwards;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: rgba(255, 107, 157, 0.6);
+            font-size: 1.5rem;
+            animation: floatUp 8s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .date-display {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 15px;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 2.5s forwards;
+            letter-spacing: 1px;
+        }
+
+        .progress-bar {
+            width: 80%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: 20px 0;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 2s forwards;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b9d, #ff8a80);
+            border-radius: 2px;
+            animation: progressLoop 14s infinite linear;
+        }
+
+        @keyframes progressLoop {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 2s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 防止移动端滑动 */
+        html, body {
+            touch-action: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="floating-hearts"></div>
+    
+    <div class="container">
+        <h1 class="title">
+            伏颜珏<span class="heart">♡</span>彭睿璇
+        </h1>
+        
+        <div class="love-quotes">
+            "时光荏苒，唯有与你共度的每一个瞬间，都闪闪发光"
+        </div>
+        
+        <div class="slideshow-container" id="slideshow">
+            <div class="slide active">
+                <img src="4752e8cd2014caa81b30ce55ffff94b.jpg" alt="美好回忆">
+            </div>
+            <div class="slide">
+                <img src="0876e91b092411cf0aae3e5c437f489.jpg" alt="美好回忆">
+            </div>
+            <div class="slide">
+                <img src="2dccc2178fb7c8781942a0c3ba19a63.jpg" alt="美好回忆">
+            </div>
+            <div class="slide">
+                <img src="b0f5f2683547a10fa39710662200f47.jpg" alt="美好回忆">
+            </div>
+            <div class="slide">
+                <img src="45ceb084ba38cba0bff9bfb260162ab.jpg" alt="美好回忆">
+            </div>
+            <div class="slide">
+                <img src="721ad120998f6120ae39048d8b44268.jpg" alt="美好回忆">
+            </div>
+            <div class="slide">
+                <img src="2a582874f080d316a91620141727016.jpg" alt="美好回忆">
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        
+        <p class="subtitle">在繁华世界中，我只想与你相依相伴</p>
+        
+        <div class="date-display">
+            💕 每一天都是我们的纪念日 💕
+        </div>
+    </div>
+
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            const numberOfStars = 50;
+            
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // 创建浮动爱心
+        function createFloatingHearts() {
+            const heartsContainer = document.querySelector('.floating-hearts');
+            const heartSymbols = ['♥', '♡', '💕', '💖', '✨'];
+            
+            function addHeart() {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heart.style.animationDuration = (6 + Math.random() * 4) + 's';
+                heartsContainer.appendChild(heart);
+                
+                // 8秒后移除元素
+                setTimeout(() => {
+                    if (heart.parentNode) {
+                        heart.parentNode.removeChild(heart);
+                    }
+                }, 8000);
+            }
+            
+            // 每3秒添加一个爱心
+            setInterval(addHeart, 3000);
+            // 立即添加第一个
+            addHeart();
+        }
+
+        // 轮播图功能
+        let currentSlide = 0;
+        let slideInterval;
+        const slides = document.querySelectorAll('.slide');
+        const slideshow = document.getElementById('slideshow');
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // 自动开始轮播
+        function startAutoSlideshow() {
+            slideshow.classList.add('active');
+            slideInterval = setInterval(nextSlide, 2000);
+        }
+
+        // 动态更换爱情语录
+        const loveQuotes = [
+            "时光荏苒，唯有与你共度的每一个瞬间，都闪闪发光",
+            "在这个世界上，最美好的事就是遇见你",
+            "愿我们的故事，永远都有美好的续章",
+            "你是我心中最亮的那颗星",
+            "与你相伴的日子，每一天都是甜蜜的开始"
+        ];
+
+        function changeQuote() {
+            const quoteElement = document.querySelector('.love-quotes');
+            let quoteIndex = 0;
+            
+            setInterval(() => {
+                quoteElement.style.opacity = '0';
+                setTimeout(() => {
+                    quoteIndex = (quoteIndex + 1) % loveQuotes.length;
+                    quoteElement.textContent = `"${loveQuotes[quoteIndex]}"`;
+                    quoteElement.style.opacity = '1';
+                }, 500);
+            }, 4000);
+        }
+
+        // 防止移动端意外操作
+        document.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+
+        // 初始化
+        createStars();
+        createFloatingHearts();
+        
+        // 页面加载完成后自动开始播放
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                startAutoSlideshow();
+                changeQuote();
+            }, 2000);
+        });
+    </script>
+</body>
+</html> 
