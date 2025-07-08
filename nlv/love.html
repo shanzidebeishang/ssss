@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>💕 爱的告白 💕</title>
     <style>
         * {
@@ -34,6 +34,12 @@
             max-width: 90%;
             position: relative;
             z-index: 2;
+            /* 移动端优化 */
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .main-text {
@@ -67,6 +73,7 @@
             height: 100%;
             pointer-events: none;
             z-index: 1;
+            overflow: hidden;
         }
 
         .floating-heart {
@@ -115,6 +122,10 @@
             box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
             position: relative;
             overflow: hidden;
+            /* 移动端触摸优化 */
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
 
         .romantic-btn:hover {
@@ -185,6 +196,12 @@
             cursor: pointer;
             font-size: 1.2em;
             transition: all 0.3s ease;
+            /* 移动端触摸优化 */
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            min-width: 44px;
+            min-height: 44px;
         }
 
         .photo-nav button:hover {
@@ -286,29 +303,147 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 480px) {
+        /* 平板设备适配 */
+        @media (max-width: 768px) {
             .main-text {
-                font-size: 2em;
+                font-size: 2.2em;
             }
             .container {
-                padding: 30px 15px;
+                padding: 35px 20px;
+                max-width: 95%;
             }
             .heart {
-                font-size: 2.5em;
+                font-size: 2.8em;
             }
+            .romantic-btn {
+                padding: 14px 28px;
+                font-size: 1.1em;
+            }
+            .photo-container img {
+                height: 280px;
+            }
+        }
+
+        /* 手机设备适配 */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                overflow-x: hidden;
+            }
+            
+            .container {
+                padding: 25px 15px;
+                margin: 10px;
+                max-width: calc(100% - 20px);
+                border-radius: 20px;
+            }
+            
+            .main-text {
+                font-size: 1.8em;
+                line-height: 1.3;
+                margin: 15px 0;
+            }
+            
+            .sub-text {
+                font-size: 1.1em;
+                margin: 12px 0;
+            }
+            
+            .heart {
+                font-size: 2.2em;
+                margin: 15px 0;
+            }
+            
+            .romantic-quote {
+                font-size: 0.95em;
+                margin-top: 20px;
+                padding: 0 10px;
+                line-height: 1.5;
+            }
+            
             .buttons-container {
                 flex-direction: column;
                 align-items: center;
+                gap: 12px;
+                margin: 25px 0;
             }
+            
             .romantic-btn {
-                width: 80%;
-                margin: 8px 0;
+                width: 90%;
+                padding: 15px 20px;
+                font-size: 1em;
+                margin: 0;
+                min-height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
+            
             .photo-container {
-                max-width: 95%;
+                max-width: 100%;
+                margin: 15px auto;
             }
+            
             .photo-container img {
-                height: 250px;
+                height: 220px;
+                border-radius: 15px;
+            }
+            
+            .photo-nav button {
+                padding: 12px 16px;
+                font-size: 1.4em;
+                margin: 0 8px;
+            }
+            
+            .love-story, .wish-container {
+                padding: 20px 15px;
+                margin: 20px 0;
+                font-size: 0.95em;
+                line-height: 1.6;
+            }
+            
+            .wish-input {
+                padding: 12px;
+                font-size: 1em;
+                margin: 15px 0;
+            }
+            
+            .floating-heart {
+                font-size: 1.5em;
+            }
+            
+            .sparkle {
+                font-size: 1.2em;
+            }
+        }
+
+        /* 超小屏幕设备适配 */
+        @media (max-width: 320px) {
+            .container {
+                padding: 20px 12px;
+                margin: 5px;
+            }
+            
+            .main-text {
+                font-size: 1.6em;
+            }
+            
+            .heart {
+                font-size: 2em;
+            }
+            
+            .romantic-btn {
+                width: 95%;
+                padding: 12px 15px;
+                font-size: 0.95em;
+            }
+            
+            .photo-container img {
+                height: 180px;
+            }
+            
+            .romantic-quote {
+                font-size: 0.9em;
             }
         }
     </style>
@@ -559,6 +694,48 @@
                 nextPhoto();
             }
         }, 4000);
+
+        // 移动端滑动手势支持
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        function handleGesture() {
+            if (touchEndX < touchStartX - 50) {
+                // 向左滑动，下一张照片
+                if (document.getElementById('photoGallery').classList.contains('active')) {
+                    nextPhoto();
+                }
+            }
+            if (touchEndX > touchStartX + 50) {
+                // 向右滑动，上一张照片
+                if (document.getElementById('photoGallery').classList.contains('active')) {
+                    prevPhoto();
+                }
+            }
+        }
+
+        // 添加触摸事件监听器
+        const photoContainer = document.querySelector('.photo-container');
+        if (photoContainer) {
+            photoContainer.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            photoContainer.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleGesture();
+            });
+        }
+
+        // 防止双击缩放
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            var now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
 
         // 添加涟漪动画
         const style = document.createElement('style');
